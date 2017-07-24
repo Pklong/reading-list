@@ -1,0 +1,70 @@
+service: reading-list
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  memorySize: 256
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+
+functions:
+  create:
+    handler: books/create.create
+    events:
+      - http:
+          path: books
+          method: post
+          cors: true
+  list:
+    handler: books/list.list
+    events:
+      - http:
+          path: books
+          method: get
+          cors: true
+  get:
+    handler: books/get.get
+    events:
+      - http:
+          path: books/{id}
+          method: get
+          cors: true
+  update:
+    handler: books/update.update
+    events:
+      - http:
+          path: books/{id}
+          method: put
+          cors: true
+  delete:
+    handler: books/delete.delete
+    events:
+      - http:
+          path: books/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    booksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: booksTable
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

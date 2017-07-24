@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reading List</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Books To Read</h1>
+      <ul class="errors"></ul>
+      <article>
+	<ul class="books">
+	  
+	</ul>
+	<form>
+	  <label for="bookTitle">What is the book's title?</label>
+	  <input id="bookTitle" type="text" placeholder="title" />
+	  <label for="readBook">Have you read this book?</label>
+	  <input id="readBook" type="checkbox" />
+	  <button type="submit">Add a new book</button>
+	</form>
+      </article>
+    </main>
+    
+    <script src="./js/api.js"></script>
+    <script src="./js/listeners.js"></script>
+    <script src="./js/util.js"></script>
+    <script src="./js/main.js"></script>
+  </body>
+</html>
