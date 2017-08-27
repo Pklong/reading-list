@@ -9,37 +9,41 @@ module.exports.create = (event, context, callback) => {
   const timestamp = new Date().getTime()
   const data = JSON.parse(event.body)
   
-  if (typeof data.title !== 'string') {
+  if (typeof data.title !== 'string' ||
+      !['will read', 'have read', 'reading'].includes(data.readStatus)) {
     console.error('Validation Failed')
     callback(new Error('Could not create book'))
     return
   }
   
   const params = {
-    TableName: 'booksTable',
+    TableName: 'Books',
     Item: {
-      id: uuid.v1(),
-      title: data.title,
-      read: data.read,
-      createdAt: timestamp,
-      updatedAt: timestamp
+      Id: uuid.v1(),
+      UserId: event.requestContext.identity.cognitoIdentityId,
+      Title: data.title,
+      ReadStatus: data.readStatus,
+      CreatedAt: timestamp,
+      UpdatedAt: timestamp
     }
   }
   
   dynamoDb.put(params, (error, result) => {
-    if (error) {
-      console.error(error)
-      callback(new Error('Could not create book'))
-      return
-    }
-
     const response = {
       statusCode: 200,
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: JSON.stringify(result.Item)
+      body: ''
     }
+    if (error) {
+      response.statusCode = 422
+      response.body = JSON.stringify(new Error('Could not create book'))
+      callback(null, response)
+      return
+    }
+    // put does not support returning the created item...
+    response.body = JSON.stringify({id: params.Item.Id, title: params.Item.Title})
     callback(null, response)
   })
 }

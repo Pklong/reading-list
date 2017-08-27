@@ -12,26 +12,28 @@ module.exports.update = (event, context, callback) => {
   const data = JSON.parse(event.body)
 
   if (data.title && typeof data.title !== 'string' ||
-      data.read && typeof data.read !== 'boolean') {
+      data.readStatus && typeof data.readStatus !== 'string'
+      && !['will read', 'have read', 'reading'].includes(data.readStatus) {
     console.error('Validation Error')
     callback(new Error('could not update book'))
     return
   }
   
   const params = {
-    TableName: 'booksTable',
+    TableName: 'Books',
     Key: {
-      id: event.pathParameters.id
+      UserId: event.requestContext.identity.cognitoIdentityId,
+      Id: event.pathParameters.id
     },
     ExpressionAttributeNames: {
-      '#read_book': 'read'
+      '#read_book': 'ReadStatus'
     },
     ExpressionAttributeValues: {
       ':title': data.title,
-      ':read': data.read,
+      ':read': data.readStatus,
       ':updatedAt': timestamp
     },
-    UpdateExpression: 'SET title = :title, #read_book = :read, updatedAt = :updatedAt',
+    UpdateExpression: 'SET Title = :title, #read_book = :read, UpdatedAt = :updatedAt',
     ReturnValues: 'ALL_NEW'
   }
   

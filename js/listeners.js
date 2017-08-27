@@ -3,24 +3,59 @@
   readingList.listeners = {}
   const listeners = readingList.listeners
   
-  listeners.addSubmitListener = function() {
-    const form = document.querySelector('form')
-    document.querySelector('button').addEventListener('click', (e) => {
+  listeners.signUp = function (formEl) {
+    formEl.addEventListener('submit', e => {
       e.preventDefault()
-      const titleInput = form.querySelector('#bookTitle')
-      const readCheckbox = form.querySelector('#readBook')
-      const data = {
-	title: titleInput.value,
-	read: readCheckbox.checked
-      }
-      readingList.api.createBook(data)
-		 .then(() => {
-		   titleInput.value = ''
-		   readCheckbox.checked = false
+      const Username = formEl.querySelector('#username').value
+      const Email = formEl.querySelector('#email').value      
+      const Password = formEl.querySelector('#password').value
+      readingList.util.signUp({
+	Username,
+	Email,
+	Password
+      })
+    })
+  }
+  
+  listeners.login = function (formEl) {
+    formEl.addEventListener('submit', e => {
+      e.preventDefault()
+      const Username = formEl.querySelector('input[type=text]').value
+      const Password = formEl.querySelector('input[type=password]').value
+      readingList.util.authenticate({
+	Username,
+	Password
       })
     })
   }
 
+  listeners.setHeader = function(anchorTag, action) {
+    anchorTag.addEventListener('click', e => {
+      e.preventDefault()
+      readingList.eventEmitter.emit(action)
+    })
+    
+  }
+  
+  listeners.logout = function (buttonEl) {
+    buttonEl.addEventListener('click', e => {
+      e.preventDefault()
+      readingList.util.signOut()
+    })
+  }
+
+  listeners.submitBook = function (formEl) {
+    formEl.addEventListener('submit', (e) => {
+      e.preventDefault()
+      const title = formEl.querySelector('#bookTitle')
+      const readStatus = formEl.querySelector('#readStatus')
+      readingList.api.createBook({title: title.value, readStatus: readStatus.value})
+			       .then(() => {
+				 title.value = ''
+			       })
+    })
+  }
+  
   listeners.addDeleteListener = function() {
     document.querySelector('ul.books').addEventListener("click", (e) => {
       if (e.target && e.target.matches('button')) {

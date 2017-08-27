@@ -2,58 +2,55 @@
   readingList = root.readingList || {}
   readingList.api = {}
   const api = readingList.api
-  
-  const API_URL = 'https://w6i9b7bsnc.execute-api.us-east-1.amazonaws.com/dev/books'
 
-  api.fetchAllBooks = function() {
-    const header = new Headers()
-    const opts = {
-      header,
-      method: 'GET',
-      mode: 'cors'
-    }
-
-    fetch(API_URL, opts)
-      .then(d => d.json())
-      .then(books => readingList.util.buildBookList(books))
-      .catch(errors => readingList.util.buildErrors(errors))
-  }
-
-  api.createBook = function(book) {
-    const header = new Headers()
-    const opts = {
-      header,
-      method: 'POST',
-      mode: 'cors',
-      body: JSON.stringify(book)
-    }
-
-    return fetch(API_URL, opts)
-      .then(() => fetch(API_URL)
-	.then(d => d.json())
-	.then(books => readingList.util.buildBookList(books)))
-      .catch(errors => {
-	console.error(errors)
-      })
-  }
-
-  api.deleteBook = function(bookId) {
-    const header = new Headers()
-    const opts = {
-      header,
-      method: 'DELETE',
-      mode: 'cors'
-    }
-
-      fetch(`${API_URL}/${bookId}`, opts)
-      .then(() => fetch(API_URL)
-	.then(d => d.json())
-	.then(books => readingList.util.buildBookList(books)))
-      .catch(errors => {
-	console.error(errors)
+  api.buildapigClient = function () {
+    api.client = window.apigClientFactory.newClient({
+      accessKey: AWSCognito.config.credentials.accessKeyId,
+      secretKey: AWSCognito.config.credentials.secretAccessKey,
+      sessionToken: AWSCognito.config.credentials.sessionToken
     })
   }
 
+  api.fetchAllBooks = function() {
+    if (api.client === undefined) {
+      api.buildapigClient()
+    }
+    return api.client.booksGet()
+	      .then(books => readingList.controller.buildBookList(books.data))
+	      .catch(e => console.error(e))
+  }
 
-  
+  api.createBook = function(book) {
+    if (api.client === undefined) {
+      api.buildapigClient()
+    }
+    return api.client.booksPost({}, book)
+       .then(d => console.log(d)).catch(e => console.error(e))
+  }
+
+  api.deleteBook = function(bookId) {
+    if (api.client === undefined) {
+      api.buildapigClient()
+    }
+    api.client.booksIdDelete({id: bookId})
+       .then(d => console.log(d)).catch(e => console.error(e))    
+  }
+
+  api.updateBook = function(book) {
+    if (api.client === undefined) {
+      api.buildapigClient()
+    }
+    api.client.booksIdPut(
+      {id: book.id}, {title: book.title, readStatus: book.ReadStatus}
+    ).then(d => console.log(d)).catch(e => console.error(e))    
+  }
+
+  api.fetchSingleBook = function(bookId) {
+    if (api.client === undefined) {
+      api.buildapigClient()
+    }
+    api.client.booksIdGet({id: bookId})
+       .then(d => console.log(d)).catch(e => console.error(e))    
+  }
+
 })(this)

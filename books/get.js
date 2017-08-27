@@ -9,9 +9,10 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient()
 module.exports.get = (event, context, callback) => {
 
   const params = {
-    TableName: 'booksTable',
+    TableName: 'Books',
     Key: {
-      id: event.pathParameters.id
+      UserId: event.requestContext.identity.cognitoIdentityId,
+      Id: event.pathParameters.id
     }
   }
   

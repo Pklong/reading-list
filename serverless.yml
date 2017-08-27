@@ -14,7 +14,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+      Resource: "arn:aws:dynamodb:us-east-1:667395001029:table/Books"
 
 functions:
   create:
@@ -24,6 +24,7 @@ functions:
           path: books
           method: post
           cors: true
+          authorizer: aws_iam
   list:
     handler: books/list.list
     events:
@@ -31,6 +32,7 @@ functions:
           path: books
           method: get
           cors: true
+          authorizer: aws_iam
   get:
     handler: books/get.get
     events:
@@ -38,6 +40,7 @@ functions:
           path: books/{id}
           method: get
           cors: true
+          authorizer: aws_iam
   update:
     handler: books/update.update
     events:
@@ -45,6 +48,7 @@ functions:
           path: books/{id}
           method: put
           cors: true
+          authorizer: aws_iam
   delete:
     handler: books/delete.delete
     events:
@@ -52,19 +56,24 @@ functions:
           path: books/{id}
           method: delete
           cors: true
+          authorizer: aws_iam	  
 
 resources:
   Resources:
-    booksTable:
+    BooksTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: booksTable
+        TableName: Books
         AttributeDefinitions:
-          - AttributeName: id
+          - AttributeName: UserId
             AttributeType: S
+          - AttributeName: Id
+            AttributeType: S	    	    
         KeySchema:
-          - AttributeName: id
+          - AttributeName: UserId
             KeyType: HASH
+          - AttributeName: Id
+            KeyType: RANGE	    
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
