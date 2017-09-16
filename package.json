@@ -2,15 +2,33 @@
   "name": "reading-list",
   "version": "1.0.0",
   "description": "",
-  "main": "handler.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "eslint . && preact test",
+    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
+    "build": "preact build",
+    "serve": "preact build && preact serve",
+    "dev": "preact watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "eslintConfig": {
+    "extends": "eslint-config-synacor"
+  },
+  "devDependencies": {
+    "eslint": "^4.7.0",
+    "eslint-config-synacor": "^1.1.1",
+    "if-env": "^1.0.0",
+    "preact-cli": "^1.4.1"
+  },
   "dependencies": {
-    "aws-sdk": "^2.88.0",
+    "amazon-cognito-identity-js": "^1.19.0",
+    "aws-api-gateway-client": "^0.2.9",
+    "aws-sdk": "^2.117.0",
+    "preact": "^8.2.5",
+    "preact-compat": "^3.17.0",
+    "preact-router": "^2.5.7",
     "uuid": "^3.1.0"
   }
 }
