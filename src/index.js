@@ -5,8 +5,12 @@ import AppConfig from './config'
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
 
 import Util from './util'
+import BookIndex from './book_index'
+import Auth from './auth'
+import Header from './header'
+import Footer from './footer'
 
-import Auth from './auth';
+import 'style'
 
 export default class App extends Component {
   
@@ -16,28 +20,34 @@ export default class App extends Component {
   })
 
   state = {
-    currentUser: this.userPool.getCurrentUser()
+    currentUser: this.userPool.getCurrentUser(),
+    creds: null
   }
+  
+  refresh = (currentUser, creds) => this.setState({currentUser, creds})
 
   componentDidMount() {
     const currentUser = this.userPool.getCurrentUser()
     if (currentUser !== null) {
-      Util.refresh(currentUser)
+      Util.refresh(currentUser, this.refresh)
     }
   }
 
-  render(_, { currentUser }) {
+  render(_, { currentUser, creds }) {
     return (
-      <div id="app">
-	  {
-	    currentUser ?
-	    <div>{currentUser.username}</div> :
-	    <Auth userPool={this.userPool}
-		  login={currentUser => this.setState({currentUser})}
-	    />
-	  }
-	  
-      </div>
+      <main id="app">
+      <Header currentUser={currentUser} signOut={this.refresh} />
+      {
+	currentUser && creds ?
+	<BookIndex currentUser={currentUser} creds={creds} /> :
+	currentUser && !creds ?
+	<div className="loader" /> :
+	<Auth userPool={this.userPool}
+	      login={this.refresh}
+	/>
+      }
+      <Footer />
+      </main>
     );
   }
 }

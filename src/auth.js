@@ -18,12 +18,12 @@ export default class Auth extends Component {
   }
   render({currentUser}, {username, password}) {
     return (
-      <form onSubmit={this.submitForm}>
-	<label for="login">Enter your username or email</label>
+      <form className="auth" onSubmit={this.submitForm}>
+	<label for="login">Enter your username</label>
 	<input type="text"
 	       id="login"
 	       onChange={e => this.setState({username: e.target.value})}
-	       placeholder="Username | Email"
+	       placeholder="Username"
 	       value={username}
 	/>
 	
@@ -34,7 +34,7 @@ export default class Auth extends Component {
 	       placeholder="Password"
 	       value={password}
 	/>
-	<input type="submit"/>	
+	<button>Submit</button>	
       </form>
     );
   }

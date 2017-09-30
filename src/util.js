@@ -27,7 +27,7 @@ const util = {
 	    [AppConfig.loginKey]: result.getAccessToken().getJwtToken()
 	  }
 	})
-	loginCB(cognitoUser)
+	loginCB(cognitoUser, config.credentials)
       },
       onFailure (error) {
 	console.error(error)
@@ -58,7 +58,7 @@ const util = {
     
   },
 
-  refresh(user) {
+  refresh(user, refreshCB) {
     user.getSession((err, session) => {
       if (err) {
 	console.error(err)
@@ -84,6 +84,8 @@ const util = {
 	  console.error(err)
 	} else {
 	  console.log('refreshed credentials')
+	  refreshCB(user, config.credentials)
+	  
 	}
       })
     })
