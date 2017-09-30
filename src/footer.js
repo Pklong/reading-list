@@ -1,4 +1,4 @@
-import { h } from 'preact'
+import { h } from "preact"
 
 const Footer = () => {
   return (
@@ -7,7 +7,7 @@ const Footer = () => {
       <a href="https://www.github.com/pklong">Github</a>
       <a href="https://www.linkedin.com/in/pklong">LinkedIn</a>
     </footer>
-  );
+  )
 }
 
 export default Footer

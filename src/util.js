@@ -2,17 +2,14 @@ import {
   CognitoUserAttribute,
   AuthenticationDetails,
   CognitoUser
-} from 'amazon-cognito-identity-js';
+} from "amazon-cognito-identity-js"
 
-import {
-  CognitoIdentityCredentials,
-  config
-} from 'aws-sdk/global'
+import { CognitoIdentityCredentials, config } from "aws-sdk/global"
 
-import AppConfig from './config'
+import AppConfig from "./config"
 
 const util = {
-  authenticate(loginObj, userPool, loginCB) {
+  authenticate(loginObj, userPool, loginCB, errCB) {
     const authenticationDetails = new AuthenticationDetails(loginObj)
     const cognitoUser = new CognitoUser({
       Username: loginObj.Username,
@@ -20,82 +17,78 @@ const util = {
     })
 
     cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess (result) {
-	config.credentials = new CognitoIdentityCredentials({
-	  IdentityPoolId: AppConfig.IdentityPoolId,
-	  Logins: {
-	    [AppConfig.loginKey]: result.getAccessToken().getJwtToken()
-	  }
-	})
-	loginCB(cognitoUser, config.credentials)
+      onSuccess(result) {
+        config.credentials = new CognitoIdentityCredentials({
+          IdentityPoolId: AppConfig.IdentityPoolId,
+          Logins: {
+            [AppConfig.loginKey]: result.getAccessToken().getJwtToken()
+          }
+        })
+        loginCB(cognitoUser, config.credentials)
       },
-      onFailure (error) {
-	console.error(error)
+      onFailure(error) {
+        errCB(error.message)
       }
     })
   },
-  
-  signUp(signUpObj) {
+
+  signUp(signUpObj, userpool, refreshCB) {
     const attributeList = [
       new CognitoUserAttribute({
-	Name: 'email',
-	Value: signUpObj.Email	
+        Name: "email",
+        Value: signUpObj.Email
       })
     ]
     const { Username, Password } = signUpObj
-    readingList.app.userPool.signUp(
-      Username,
-      Password,
-      attributeList,
-      null,
-      function (err, result) {
-	if (err) {
-	  console.error(err)
-	  return
-	}
-	readingList.eventEmitter.emit('login')
+    userpool.signUp(Username, Password, attributeList, null, function(
+      err,
+      result
+    ) {
+      if (err) {
+        console.error(err)
+        return
+      }
+      debugger
     })
-    
   },
 
   refresh(user, refreshCB) {
     user.getSession((err, session) => {
       if (err) {
-	console.error(err)
-	return
+        console.error(err)
+        return
       }
 
       user.getUserAttributes((err, attributes) => {
-	if (err) {
-	  console.error(err)
-	}
+        if (err) {
+          console.error(err)
+        }
       })
 
-      config.credentials = new CognitoIdentityCredentials({
-	IdentityPoolId: AppConfig.IdentityPoolId,
-	Logins: {
-	  [AppConfig.loginKey]: session.getIdToken().getJwtToken()
-	}
-      }, {
-	region: AppConfig.region
-      })
+      config.credentials = new CognitoIdentityCredentials(
+        {
+          IdentityPoolId: AppConfig.IdentityPoolId,
+          Logins: {
+            [AppConfig.loginKey]: session.getIdToken().getJwtToken()
+          }
+        },
+        {
+          region: AppConfig.region
+        }
+      )
       config.credentials.refresh(err => {
-	if (err) {
-	  console.error(err)
-	} else {
-	  console.log('refreshed credentials')
-	  refreshCB(user, config.credentials)
-	  
-	}
+        if (err) {
+          console.error(err)
+        } else {
+          refreshCB(user, config.credentials)
+        }
       })
     })
   },
-
   signOut() {
     const currentUser = readingList.app.userPool.getCurrentUser()
     currentUser && currentUser.signOut()
     AWSCognito.config.clear()
-    readingList.eventEmitter.emit('logout')
   }
 }
 

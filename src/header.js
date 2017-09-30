@@ -1,4 +1,4 @@
-import { h, Component } from 'preact'
+import { h, Component } from "preact"
 
 export default class Header extends Component {
   clickCB = e => {
@@ -8,15 +8,16 @@ export default class Header extends Component {
     // clear currentUser and credentials
     signOut(null, null)
   }
-  
+
   render({ currentUser }, {}) {
-    console.log(currentUser)
-    let btn = currentUser ? <button onClick={this.clickCB}>Sign Out</button> : null
+    let btn = currentUser ? (
+      <button onClick={this.clickCB}>Sign Out</button>
+    ) : null
     return (
-    <header>
-      <h1>READING LIST</h1>
-      { btn }
-    </header>
-    );
+      <header>
+        <h1>READING LIST</h1>
+        {btn}
+      </header>
+    )
   }
 }
