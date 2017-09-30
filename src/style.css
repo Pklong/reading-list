@@ -11,6 +11,7 @@ html, body, h1, ul, li, a, main, header, button {
 
 body {
   font-family: sans-serif;
+  background: rgb(211, 211, 211);
 }
 
 li {
@@ -19,6 +20,24 @@ li {
 
 a {
   text-decoration: none;
+}
+
+/* NOTIFICATION */
+
+.notification {
+  background: rgb(102, 153, 157);
+  height: 10vh;
+  width: 50vw;
+  position: fixed;
+  top: 10vh;
+  left: 25vw;
+  color: rgb(166, 33, 7);
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* HEADER | FOOTER */
@@ -49,9 +68,13 @@ header > button:hover, a:hover {
 
 /* AUTH FORM */
 
+section {
+  display: flex;
+  justify-content: space-around;
+}
+
 .auth {
   background: rgb(83, 83, 104);
-  height: 25vh;
   color: white;
   font-size: 1.5rem;
 }
