@@ -1,8 +1,128 @@
-html, body {
-	font: 14px/1.21 'Helvetica Neue', arial, sans-serif;
-	font-weight: 400;
+/* RESET  */
+
+html, body, h1, ul, li, a, main, header, button {
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
 }
 
-h1 {
-	text-align: center;
+body {
+  font-family: sans-serif;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* HEADER | FOOTER */
+
+header, footer {
+  background: rgb(102, 153, 157);
+  display: flex;
+  justify-content: space-between;
+}
+
+header > h1 {
+  color: rgb(166, 33, 7);
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+header > button, a {
+  color: white;
+  cursor: pointer;
+  transition: color .5s, background 2s;
+  padding: 10px;
+}
+
+header > button:hover, a:hover {
+  color: rgb(166, 33, 7);
+  background: rgb(255, 255, 255);
+}
+
+/* AUTH FORM */
+
+.auth {
+  background: rgb(83, 83, 104);
+  height: 25vh;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.auth > input {
+  display: block;
+  padding: 5px;
+  margin-left: 10px;
+}
+
+.auth > label {
+  display: inline-block;
+  padding: 10px;
+}
+
+/* SPINNER */
+
+.loader,
+.loader:before,
+.loader:after {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1.8s infinite ease-in-out;
+  animation: load7 1.8s infinite ease-in-out;
+}
+.loader {
+  color: #ffffff;
+  font-size: 10px;
+  margin: 80px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+.loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.loader:after {
+  left: 3.5em;
+}
+@-webkit-keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+@keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
 }
