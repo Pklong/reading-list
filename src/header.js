@@ -9,14 +9,21 @@ export default class Header extends Component {
     signOut(null, null)
   }
 
-  render({ currentUser }, {}) {
-    let btn = currentUser ? (
+  render({ currentUser, setAuth, authForm }, {}) {
+    const authBtn =
+      authForm === "login" ? (
+        <button onClick={setAuth("signup")}>Sign Up</button>
+      ) : (
+        <button onClick={setAuth("login")}>Login</button>
+      )
+    const signOutBtn = currentUser ? (
       <button onClick={this.clickCB}>Sign Out</button>
     ) : null
     return (
       <header>
         <h1>READING LIST</h1>
-        {btn}
+        {authBtn}
+        {signOutBtn}
       </header>
     )
   }

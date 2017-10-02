@@ -16,6 +16,10 @@ export default class AuthLogin extends Component {
       setCreds,
       setMsg
     )
+    this.setState({
+      username: "",
+      password: ""
+    })
   }
 
   render({ currentUser }, { username, password }) {

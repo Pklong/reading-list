@@ -22,14 +22,18 @@ export default class App extends Component {
   state = {
     currentUser: this.userPool.getCurrentUser(),
     creds: null,
-    msg: ""
+    msg: "",
+    auth: "login"
   }
 
   refresh = (currentUser, creds) => this.setState({ currentUser, creds })
+
   setMsg = msg =>
     this.setState({ msg }, () => {
       setTimeout(() => this.setState({ msg: "" }), 3000)
     })
+
+  setAuth = authState => () => this.setState({ auth: authState })
 
   componentDidMount() {
     const currentUser = this.userPool.getCurrentUser()
@@ -38,11 +42,16 @@ export default class App extends Component {
     }
   }
 
-  render(_, { currentUser, creds, msg }) {
+  render(_, { currentUser, creds, msg, auth }) {
     return (
       <main id="app">
         <Notification msg={msg} />
-        <Header currentUser={currentUser} signOut={this.refresh} />
+        <Header
+          authForm={auth}
+          currentUser={currentUser}
+          setAuth={this.setAuth}
+          signOut={this.refresh}
+        />
         {currentUser && creds ? (
           <BookIndex currentUser={currentUser} creds={creds} />
         ) : currentUser && !creds ? (
@@ -52,6 +61,7 @@ export default class App extends Component {
             userpool={this.userPool}
             setCreds={this.refresh}
             setMsg={this.setMsg}
+            formType={auth}
           />
         )}
         <Footer />

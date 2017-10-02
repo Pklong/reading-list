@@ -32,7 +32,7 @@ const util = {
     })
   },
 
-  signUp(signUpObj, userpool, refreshCB) {
+  signUp(signUpObj, userpool, refreshCB, setMsg) {
     const attributeList = [
       new CognitoUserAttribute({
         Name: "email",
@@ -45,10 +45,10 @@ const util = {
       result
     ) {
       if (err) {
-        console.error(err)
-        return
+        setMsg(err.message)
+      } else {
+        setMsg(`${result.user.username} created. Please confirm email.`)
       }
-      debugger
     })
   },
 

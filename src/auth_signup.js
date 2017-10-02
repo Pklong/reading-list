@@ -10,9 +10,14 @@ export default class AuthSignup extends Component {
   submitForm = e => {
     e.preventDefault()
     const { username, password, email } = this.state
-    const { userpool, setCreds, signUp } = this.props
+    const { userpool, setCreds, signUp, setMsg } = this.props
     const signUpOpts = { Username: username, Password: password, Email: email }
-    signUp(signUpOpts, userpool, setCreds)
+    signUp(signUpOpts, userpool, setCreds, setMsg)
+    this.setState({
+      username: "",
+      password: "",
+      email: ""
+    })
   }
 
   render({}, { username, password, email }) {
