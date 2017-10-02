@@ -22,7 +22,7 @@ export default class Header extends Component {
     return (
       <header>
         <h1>READING LIST</h1>
-        {authBtn}
+        {currentUser ? null : authBtn}
         {signOutBtn}
       </header>
     )
