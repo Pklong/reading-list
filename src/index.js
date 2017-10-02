@@ -53,7 +53,11 @@ export default class App extends Component {
           signOut={this.refresh}
         />
         {currentUser && creds ? (
-          <BookIndex currentUser={currentUser} creds={creds} />
+          <BookIndex
+            currentUser={currentUser}
+            setMsg={this.setMsg}
+            creds={creds}
+          />
         ) : currentUser && !creds ? (
           <div className="loader" />
         ) : (
